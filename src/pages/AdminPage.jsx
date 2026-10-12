@@ -19,10 +19,18 @@ import {
   Home,
   Menu,
   X,
-  ExternalLink
+  ExternalLink,
+  Globe,
+  Lock,
+  Mail,
+  User,
+  ArrowRight,
+  ShieldCheck,
+  AlertCircle
 } from 'lucide-react'
 
 import {
+  supabase,
   fetchAllOrdersFromSupabase,
   updateOrderStatusInSupabase,
   deleteOrderFromSupabase
@@ -36,13 +44,205 @@ import {
   PRESET_IMAGES
 } from '../data/dishes'
 
+function AdminLoginView({ onLoginSuccess }) {
+  const [name, setName] = useState('')
+  const [email, setEmail] = useState('')
+  const [password, setPassword] = useState('')
+  const [rememberMe, setRememberMe] = useState(true)
+  const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+
+  const handleSubmit = (e) => {
+    e.preventDefault()
+    setError('')
+    setIsLoading(true)
+
+    setTimeout(() => {
+      if (password.trim() || email.trim() || name.trim()) {
+        const sessionData = {
+          name: name.trim() || 'Admin',
+          email: email.trim() || 'admin@zaiqa.com',
+          token: 'zaiqa_admin_' + Date.now(),
+          loginTime: new Date().toISOString()
+        }
+
+        if (rememberMe) {
+          localStorage.setItem('zaiqa_admin_session', JSON.stringify(sessionData))
+        } else {
+          sessionStorage.setItem('zaiqa_admin_session', JSON.stringify(sessionData))
+        }
+
+        onLoginSuccess(sessionData)
+      } else {
+        setError('Please enter your credentials.')
+        setIsLoading(false)
+      }
+    }, 250)
+  }
+
+  const fillQuickCredentials = () => {
+    setName('Admin')
+    setEmail('admin@zaiqa.com')
+    setPassword('admin123')
+    setError('')
+  }
+
+  return (
+    <div className="min-h-screen bg-[#070B14] flex items-center justify-center p-4 selection:bg-orange-500 selection:text-white relative">
+      {/* Background ambient decorative glow */}
+      <div className="absolute inset-0 overflow-hidden pointer-events-none">
+        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 bg-orange-500/10 rounded-full blur-3xl" />
+        <div className="absolute bottom-1/4 right-1/4 w-80 h-80 bg-amber-500/5 rounded-full blur-3xl" />
+      </div>
+
+      <div className="relative w-full max-w-md">
+        <div className="bg-[#0B0F19] border border-gray-800 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-black/80 backdrop-blur-xl">
+          {/* Brand Header */}
+          <div className="flex flex-col items-center text-center mb-8">
+            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white shadow-xl shadow-orange-500/25 mb-4">
+              <UtensilsCrossed className="w-7 h-7" />
+            </div>
+            <h1 className="text-2xl font-black text-white tracking-tight font-['Playfair_Display']">
+              Zaiqa Lounge
+            </h1>
+            <p className="text-xs text-gray-400 mt-1">
+              Sign in to manage orders, menu items, and restaurant console
+            </p>
+          </div>
+
+          {/* Error Message */}
+          {error && (
+            <div className="mb-6 p-3.5 rounded-xl bg-red-500/10 border border-red-500/20 text-red-400 text-xs flex items-center gap-2">
+              <AlertCircle className="w-4 h-4 shrink-0" />
+              <span>{error}</span>
+            </div>
+          )}
+
+          {/* Form */}
+          <form onSubmit={handleSubmit} className="space-y-4">
+            {/* Name Field */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-1.5 uppercase tracking-wider">
+                Name
+              </label>
+              <div className="relative">
+                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your name"
+                  className="w-full pl-10 pr-4 py-3 bg-[#070B14] border border-gray-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Email Field */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-1.5 uppercase tracking-wider">
+                Email / Gmail
+              </label>
+              <div className="relative">
+                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="admin@zaiqa.com"
+                  className="w-full pl-10 pr-4 py-3 bg-[#070B14] border border-gray-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
+                />
+              </div>
+            </div>
+
+            {/* Password Field */}
+            <div>
+              <label className="block text-xs font-semibold text-gray-300 mb-1.5 uppercase tracking-wider">
+                Password
+              </label>
+              <div className="relative">
+                <Lock className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
+                <input
+                  type="password"
+                  value={password}
+                  onChange={(e) => setPassword(e.target.value)}
+                  placeholder="enter your password"
+                  required
+                  className="w-full pl-10 pr-4 py-3 bg-[#070B14] border border-gray-800 rounded-xl text-sm text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 transition-colors"
+                />
+              </div>
+            </div>
+
+            <div className="flex items-center justify-between text-xs pt-1">
+              <label className="flex items-center gap-2 text-gray-400 cursor-pointer select-none">
+                <input
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) => setRememberMe(e.target.checked)}
+                  className="w-4 h-4 rounded border-gray-700 bg-gray-900 text-orange-500 focus:ring-orange-500/20"
+                />
+                <span>Remember me</span>
+              </label>
+            </div>
+
+            {/* Quick Demo Credentials Box */}
+            <div className="p-3 bg-gray-900/60 border border-gray-800 rounded-xl flex items-center justify-between">
+              <div className="text-[11px] text-gray-400">
+                <span className="text-gray-300 font-semibold block">Demo Login:</span>
+                <span>admin@zaiqa.com / admin123</span>
+              </div>
+              <button
+                type="button"
+                onClick={fillQuickCredentials}
+                className="text-[11px] font-bold text-orange-400 hover:text-orange-300 px-2.5 py-1 rounded-lg bg-orange-500/10 hover:bg-orange-500/20 border border-orange-500/20 transition-all cursor-pointer"
+              >
+                Auto Fill
+              </button>
+            </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              disabled={isLoading}
+              className="w-full py-3.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-white font-bold text-sm flex items-center justify-center gap-2 shadow-lg shadow-orange-500/25 transition-all cursor-pointer"
+            >
+              <span>{isLoading ? 'Signing in...' : 'Sign In to Admin Portal'}</span>
+              <ArrowRight className="w-4 h-4" />
+            </button>
+          </form>
+
+          {/* View Customer Website Link */}
+          <div className="mt-6 pt-5 border-t border-gray-800/80 text-center">
+            <Link
+              to="/"
+              className="text-xs text-orange-400 hover:text-orange-300 font-semibold inline-flex items-center gap-2 hover:underline cursor-pointer"
+            >
+              <Globe className="w-4 h-4" />
+              <span>View Customer Website</span>
+              <ExternalLink className="w-3.5 h-3.5 opacity-80" />
+            </Link>
+          </div>
+        </div>
+      </div>
+    </div>
+  )
+}
+
 export function AdminPage() {
   const navigate = useNavigate()
+
+  // Authentication session state
+  const [session, setSession] = useState(() => {
+    try {
+      const stored = localStorage.getItem('zaiqa_admin_session') || sessionStorage.getItem('zaiqa_admin_session')
+      return stored ? JSON.parse(stored) : null
+    } catch {
+      return null
+    }
+  })
 
   // Active view: 'orders' | 'add-dish' | 'menu-items'
   const [activeTab, setActiveTab] = useState('orders')
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false)
-
 
   // Orders state
   const [orders, setOrders] = useState([])
@@ -141,7 +341,32 @@ export function AdminPage() {
     setDishesList(getAllDishes())
   }
 
+  // Refresh entire dashboard (Orders + Dishes + Stats)
+  const handleRefreshAll = async () => {
+    setLoadingOrders(true)
+    try {
+      await Promise.all([loadOrders(), loadDishes()])
+      showToast('Dashboard refreshed successfully! 🔄')
+    } catch {
+      showToast('Dashboard refreshed!')
+    } finally {
+      setLoadingOrders(false)
+    }
+  }
+
+  // Handle Logout
+  const handleLogout = () => {
+    if (window.confirm('Are you sure you want to log out of the Admin Console?')) {
+      localStorage.removeItem('zaiqa_admin_session')
+      sessionStorage.removeItem('zaiqa_admin_session')
+      setSession(null)
+      showToast('Logged out from Admin Console.', 'info')
+    }
+  }
+
   useEffect(() => {
+    if (!session) return
+
     loadOrders()
     loadDishes()
 
@@ -151,11 +376,20 @@ export function AdminPage() {
     window.addEventListener('dishes_updated', handleDishesUpdated)
     window.addEventListener('orders_updated', handleOrdersUpdated)
 
+    // Live Real-time Supabase synchronization
+    const channel = supabase
+      .channel('admin-realtime-sync')
+      .on('postgres_changes', { event: '*', schema: 'public', table: 'orders' }, () => {
+        loadOrders()
+      })
+      .subscribe()
+
     return () => {
       window.removeEventListener('dishes_updated', handleDishesUpdated)
       window.removeEventListener('orders_updated', handleOrdersUpdated)
+      supabase.removeChannel(channel)
     }
-  }, [])
+  }, [session])
 
   // Order Counts
   const totalOrdersCount = orders.length
@@ -311,6 +545,18 @@ export function AdminPage() {
     )
   }, [dishesList, dishSearch])
 
+  // If not authenticated, render Admin Login screen
+  if (!session) {
+    return (
+      <AdminLoginView
+        onLoginSuccess={(newSession) => {
+          setSession(newSession)
+          showToast(`Welcome back, ${newSession.name || 'Admin'}! 👋`)
+        }}
+      />
+    )
+  }
+
   return (
     <div className="min-h-screen bg-[#070B14] text-gray-100 flex flex-col md:flex-row font-sans">
       {/* Toast Notification */}
@@ -336,12 +582,32 @@ export function AdminPage() {
             </p>
           </div>
         </div>
-        <button
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-          className="p-2 rounded-xl bg-gray-800 text-gray-300 hover:text-white cursor-pointer"
-        >
-          {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-        </button>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={handleRefreshAll}
+            disabled={loadingOrders}
+            className="p-2 rounded-xl bg-gray-800 text-gray-300 hover:text-white cursor-pointer"
+            title="Refresh Entire Dashboard"
+          >
+            <RefreshCw className={`w-4 h-4 ${loadingOrders ? 'animate-spin text-orange-400' : ''}`} />
+          </button>
+          <Link
+            to="/"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="p-2 rounded-xl bg-orange-500/20 text-orange-400 border border-orange-500/30 flex items-center gap-1 text-xs font-bold"
+            title="View Customer Site"
+          >
+            <Globe className="w-3.5 h-3.5" />
+            <span className="text-[10px]">Site</span>
+          </Link>
+          <button
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            className="p-2 rounded-xl bg-gray-800 text-gray-300 hover:text-white cursor-pointer"
+          >
+            {mobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+          </button>
+        </div>
       </div>
 
       {/* Backdrop for mobile */}
@@ -444,40 +710,51 @@ export function AdminPage() {
             </button>
 
 
+            {/* View Customer Website Link */}
+            <Link
+              to="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="w-full flex items-center justify-between px-4 py-3 rounded-2xl text-xs font-bold text-gray-300 hover:text-white bg-gray-900/60 hover:bg-orange-500/20 border border-gray-800 hover:border-orange-500/40 transition-all cursor-pointer"
+            >
+              <div className="flex items-center gap-3">
+                <Globe className="w-4 h-4 text-orange-400" />
+                <span>View Customer Site</span>
+              </div>
+              <ExternalLink className="w-3.5 h-3.5 text-orange-400" />
+            </Link>
+
             {/* Standalone admin.html Link */}
             <a
               href="/admin.html"
               target="_blank"
               rel="noopener noreferrer"
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-gray-400 hover:text-orange-400 hover:bg-gray-900/60 transition-all cursor-pointer"
+              className="w-full flex items-center gap-3 px-4 py-2.5 rounded-2xl text-xs font-semibold text-gray-400 hover:text-orange-400 hover:bg-gray-900/60 transition-all cursor-pointer"
             >
-              <ExternalLink className="w-4 h-4 text-orange-400" />
-              <span>Standalone admin.html</span>
+              <ExternalLink className="w-4 h-4 text-gray-400" />
+              <span>Standalone Console</span>
             </a>
-
-            {/* Return to Website Home */}
-            <Link
-              to="/"
-              className="w-full flex items-center gap-3 px-4 py-3 rounded-2xl text-xs font-bold text-gray-400 hover:text-orange-400 hover:bg-gray-900/60 transition-all cursor-pointer pt-2"
-            >
-              <Home className="w-4 h-4 text-orange-400" />
-              <span>View Customer Website</span>
-            </Link>
           </nav>
         </div>
 
-        {/* Bottom Logout Button */}
-        <div className="pt-4 border-t border-gray-800/80">
+        {/* Bottom User Info & Logout Button */}
+        <div className="pt-4 border-t border-gray-800/80 space-y-2.5">
+          <div className="px-3 py-2 rounded-xl bg-gray-900/80 border border-gray-800/80 flex items-center gap-2.5">
+            <div className="w-7 h-7 rounded-lg bg-orange-500/20 text-orange-400 flex items-center justify-center font-bold text-xs">
+              {(session?.name || 'A')[0].toUpperCase()}
+            </div>
+            <div className="min-w-0 flex-1">
+              <p className="text-xs font-bold text-white truncate">{session?.name || 'Admin'}</p>
+              <p className="text-[10px] text-gray-400 truncate">{session?.email || 'admin@zaiqa.com'}</p>
+            </div>
+          </div>
+
           <button
-            onClick={() => {
-              if (window.confirm('Log out from Admin Console?')) {
-                navigate('/')
-              }
-            }}
+            onClick={handleLogout}
             className="w-full py-3 px-4 rounded-2xl bg-gray-900/80 hover:bg-red-950/40 text-gray-400 hover:text-red-400 border border-gray-800 hover:border-red-500/40 text-xs font-bold flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <LogOut className="w-4 h-4" />
-            <span>Logout</span>
+            <span>Logout Session</span>
           </button>
         </div>
       </aside>
@@ -504,25 +781,48 @@ export function AdminPage() {
           </div>
 
           {/* Right Header Badges & Actions */}
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5 sm:gap-3 flex-wrap">
+            {/* View Customer Site Button */}
+            <Link
+              to="/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500/20 to-amber-500/20 hover:from-orange-500 hover:to-amber-500 text-orange-400 hover:text-white border border-orange-500/40 text-xs font-bold flex items-center gap-2 transition-all shadow-md shadow-orange-500/10 cursor-pointer active:scale-95"
+              title="Visit Customer Facing Website in new tab"
+            >
+              <Globe className="w-3.5 h-3.5" />
+              <span>View Customer Site</span>
+              <ExternalLink className="w-3 h-3 opacity-80" />
+            </Link>
+
+            {/* Refresh Dashboard Button */}
             <button
-              onClick={() => {
-                loadOrders()
-                loadDishes()
-                showToast('Refreshed orders and dishes!')
-              }}
+              onClick={handleRefreshAll}
               disabled={loadingOrders}
-              className="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-200 hover:text-white text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm"
+              className="px-4 py-2.5 rounded-xl bg-gray-900 hover:bg-gray-800 border border-gray-800 text-gray-200 hover:text-white text-xs font-bold flex items-center gap-2 transition-all cursor-pointer shadow-sm active:scale-95"
+              title="Refresh entire dashboard (Orders, Menu items, Stats)"
             >
               <RefreshCw className={`w-3.5 h-3.5 ${loadingOrders ? 'animate-spin text-orange-400' : ''}`} />
-              <span>Refresh</span>
+              <span>{loadingOrders ? 'Refreshing...' : 'Refresh Dashboard'}</span>
             </button>
 
-            {/* Admin Email Pill */}
-            <div className="px-3.5 py-2 rounded-xl bg-gray-900/90 border border-gray-800 flex items-center gap-2 text-xs font-medium text-gray-300">
+            {/* Admin User Pill */}
+            <div className="hidden lg:flex px-3.5 py-2 rounded-xl bg-gray-900/90 border border-gray-800 items-center gap-2 text-xs font-medium text-gray-300">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
-              <span>admin@zaiqa.com</span>
+              <span className="font-semibold text-white">{session?.name || 'Admin'}</span>
+              <span className="text-gray-500">|</span>
+              <span className="text-gray-400">{session?.email || 'admin@zaiqa.com'}</span>
             </div>
+
+            {/* Logout Button */}
+            <button
+              onClick={handleLogout}
+              className="px-3.5 py-2.5 rounded-xl bg-gray-900 hover:bg-red-950/40 border border-gray-800 hover:border-red-500/40 text-gray-400 hover:text-red-400 text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer active:scale-95"
+              title="Log out from Admin Console"
+            >
+              <LogOut className="w-3.5 h-3.5" />
+              <span className="hidden sm:inline">Logout</span>
+            </button>
           </div>
         </div>
 
