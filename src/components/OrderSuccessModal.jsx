@@ -157,122 +157,94 @@ export function OrderSuccessModal({ order, onClose, onTrackOrder }) {
           transform: `translate3d(${position.x}px, ${position.y}px, 0)`,
           transition: isDragging ? 'none' : 'transform 0.15s ease-out'
         }}
-        className={`relative w-full max-w-2xl lg:max-w-3xl glass-panel rounded-2xl sm:rounded-3xl p-4 sm:p-7 border border-orange-500/50 shadow-2xl shadow-black/80 overflow-hidden h-[94vh] max-h-[860px] flex flex-col select-auto transition-shadow ${
-          isDragging ? 'shadow-orange-500/40 ring-2 ring-orange-500/60' : ''
+        className={`relative w-full max-w-xl glass-panel rounded-2xl sm:rounded-3xl p-3.5 sm:p-6 border border-orange-500/40 shadow-2xl overflow-hidden max-h-[94vh] sm:max-h-[88vh] flex flex-col select-auto transition-shadow ${
+          isDragging ? 'shadow-orange-500/30 ring-2 ring-orange-500/50' : ''
         }`}
       >
         {/* Top decorative gradient bar */}
         <div className="absolute top-0 left-0 right-0 h-1.5 sm:h-2 bg-gradient-to-r from-orange-500 via-amber-400 to-emerald-400" />
 
-        {/* Top Control Bar with Drag Handle & Position Helpers */}
-        <div className="w-full flex items-center justify-between pt-0.5 pb-2.5 border-b border-gray-800/80 mb-2">
-          {/* Quick Position Shift (Up / Reset / Down) */}
-          <div className="flex items-center gap-1.5">
-            <button
-              type="button"
-              onClick={() => setPosition(p => ({ ...p, y: Math.max(p.y - 70, -260) }))}
-              className="px-2 py-0.5 rounded-lg bg-gray-800/80 hover:bg-orange-500/20 text-gray-300 hover:text-orange-300 text-[10px] font-bold border border-gray-700/60 transition-all cursor-pointer flex items-center gap-1"
-              title="Move modal up"
-            >
-              ▲ Up
-            </button>
-            <button
-              type="button"
-              onClick={() => setPosition({ x: 0, y: 0 })}
-              className="px-2 py-0.5 rounded-lg bg-gray-800/80 hover:bg-gray-700 text-gray-300 hover:text-white text-[10px] font-bold border border-gray-700/60 transition-all cursor-pointer"
-              title="Center modal"
-            >
-              Center
-            </button>
-            <button
-              type="button"
-              onClick={() => setPosition(p => ({ ...p, y: Math.min(p.y + 70, 260) }))}
-              className="px-2 py-0.5 rounded-lg bg-gray-800/80 hover:bg-orange-500/20 text-gray-300 hover:text-orange-300 text-[10px] font-bold border border-gray-700/60 transition-all cursor-pointer flex items-center gap-1"
-              title="Move modal down"
-            >
-              ▼ Down
-            </button>
-          </div>
-
-          {/* Central Drag Pill */}
-          <div
-            onMouseDown={handleMouseDown}
-            onTouchStart={handleTouchStart}
-            className="flex items-center gap-1.5 px-3.5 py-1 rounded-full bg-gray-800/90 hover:bg-orange-500/25 text-gray-300 hover:text-orange-300 transition-colors border border-gray-700/70 shadow-xs cursor-grab active:cursor-grabbing select-none touch-none"
-            title="Click & drag to move anywhere"
-          >
-            <GripHorizontal className="w-3.5 h-3.5 text-orange-400" />
-            <span className="text-[10px] font-bold tracking-wider uppercase">Drag to Move</span>
-          </div>
-
-          {/* Close button */}
-          <button
-            onClick={onClose}
-            className="p-1.5 text-gray-400 hover:text-white rounded-full bg-gray-800/80 hover:bg-gray-700 transition-colors cursor-pointer"
-            aria-label="Close modal"
-          >
-            <X className="w-4 h-4 sm:w-5 sm:h-5" />
-          </button>
-        </div>
-
-        {/* Compact & Stylish Header */}
-        <div className="flex items-center gap-3 sm:gap-4 mb-3 shrink-0">
-          <div className="w-11 h-11 sm:w-13 sm:h-13 rounded-2xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center shrink-0 ring-4 ring-emerald-500/10 shadow-lg">
-            <CheckCircle2 className="w-6 h-6 sm:w-7 sm:h-7" />
-          </div>
-          <div className="min-w-0 flex-1">
-            <h3 className="text-xl sm:text-2xl font-extrabold text-white font-['Playfair_Display'] leading-tight">
-              Order Confirmed!
-            </h3>
-            <p className="text-xs sm:text-sm text-gray-300 truncate">
-              Thank you, <strong className="text-white">{order.customerName}</strong>! Feast sent to royal kitchen.
-            </p>
+        {/* Drag Handle Bar */}
+        <div
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          className="w-full flex items-center justify-center pt-0.5 pb-2 cursor-grab active:cursor-grabbing select-none group touch-none"
+          title="Drag to move this popup"
+        >
+          <div className="flex items-center gap-1.5 px-3 py-1 rounded-full bg-gray-800/90 group-hover:bg-orange-500/20 text-gray-400 group-hover:text-orange-300 transition-colors border border-gray-700/60 shadow-xs">
+            <GripHorizontal className="w-3.5 h-3.5" />
+            <span className="text-[10px] font-semibold tracking-wider uppercase">Drag to Move</span>
           </div>
         </div>
 
-        {/* Prominent Tracking Reference ID Card */}
-        <div className="mb-3 sm:mb-4 p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-orange-950/70 via-amber-950/50 to-orange-950/70 border border-orange-500/50 shadow-inner flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3 shrink-0">
-          <div className="text-center sm:text-left flex-1 min-w-0">
-            <div className="text-[10px] sm:text-[11px] font-bold text-orange-300 uppercase tracking-wider flex items-center justify-center sm:justify-start gap-1.5">
-              <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
-              <span>Your Order Tracking ID</span>
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          className="absolute top-3 right-3 sm:top-4 sm:right-4 p-2 text-gray-400 hover:text-white rounded-full bg-gray-800/80 hover:bg-gray-700 transition-colors cursor-pointer z-10"
+          aria-label="Close modal"
+        >
+          <X className="w-4 h-4 sm:w-5 sm:h-5" />
+        </button>
+
+        {/* Header - Also draggable */}
+        <div
+          onMouseDown={handleMouseDown}
+          onTouchStart={handleTouchStart}
+          className="text-center space-y-1 mb-3 sm:mb-4 shrink-0 cursor-grab active:cursor-grabbing select-none"
+        >
+          <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-emerald-500/20 text-emerald-400 flex items-center justify-center mx-auto ring-6 sm:ring-8 ring-emerald-500/10 shadow-lg">
+            <CheckCircle2 className="w-7 h-7 sm:w-8 sm:h-8" />
+          </div>
+          <h3 className="text-xl sm:text-2xl md:text-3xl font-extrabold text-white font-['Playfair_Display']">
+            Order Confirmed!
+          </h3>
+          <p className="text-xs sm:text-sm text-gray-300">
+            Thank you, <strong className="text-white">{order.customerName}</strong>! Your feast has been sent to our royal kitchen.
+          </p>
+        </div>
+
+        {/* Scrollable Order Details Body with Inside Scrollbar */}
+        <div className="flex-1 overflow-y-scroll space-y-3 pr-2 text-xs min-h-0 modal-inside-scrollbar">
+          {/* Prominent Tracking Reference ID Card */}
+          <div className="p-3 sm:p-4 rounded-xl sm:rounded-2xl bg-gradient-to-r from-orange-950/70 via-amber-950/50 to-orange-950/70 border border-orange-500/50 shadow-inner flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5 sm:gap-3">
+            <div className="text-center sm:text-left flex-1 min-w-0">
+              <div className="text-[10px] sm:text-[11px] font-bold text-orange-300 uppercase tracking-wider flex items-center justify-center sm:justify-start gap-1.5">
+                <Sparkles className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>Your Order Tracking ID</span>
+              </div>
+              <div className="text-lg sm:text-2xl md:text-2xl font-black text-amber-300 font-mono mt-0.5 tracking-wide break-all">
+                {referenceId}
+              </div>
+              <p className="text-[10px] sm:text-[11px] text-gray-300 mt-0.5">
+                Enter this ID on the Track Order page to follow your delivery
+              </p>
             </div>
-            <div className="text-lg sm:text-2xl md:text-2xl font-black text-amber-300 font-mono mt-0.5 tracking-wide break-all">
-              {referenceId}
+
+            <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
+              <button
+                onClick={copyRefToClipboard}
+                className="flex-1 sm:flex-none px-3.5 py-2 sm:py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 active:scale-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/30 transition-all cursor-pointer"
+              >
+                {copiedRef ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5" />}
+                <span>{copiedRef ? 'Copied ID!' : 'Copy Reference ID'}</span>
+              </button>
+
+              <button
+                onClick={handleTrackClick}
+                className="flex-1 sm:flex-none px-3.5 py-2 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all cursor-pointer"
+              >
+                <Compass className="w-3.5 h-3.5" />
+                <span>Track Now</span>
+              </button>
             </div>
-            <p className="text-[10px] sm:text-[11px] text-gray-300 mt-0.5">
-              Enter this ID on the Track Order page to follow your delivery
-            </p>
           </div>
 
-          <div className="flex items-center gap-2 w-full sm:w-auto shrink-0">
-            <button
-              onClick={copyRefToClipboard}
-              className="flex-1 sm:flex-none px-3.5 py-2 sm:py-2.5 rounded-xl bg-orange-500 hover:bg-orange-600 active:scale-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-orange-500/30 transition-all cursor-pointer"
-            >
-              {copiedRef ? <Check className="w-3.5 h-3.5 text-white" /> : <Copy className="w-3.5 h-3.5" />}
-              <span>{copiedRef ? 'Copied ID!' : 'Copy Reference ID'}</span>
-            </button>
-
-            <button
-              onClick={handleTrackClick}
-              className="flex-1 sm:flex-none px-3.5 py-2 sm:py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 active:scale-95 text-white text-xs font-bold flex items-center justify-center gap-1.5 shadow-md shadow-emerald-600/30 transition-all cursor-pointer"
-            >
-              <Compass className="w-3.5 h-3.5" />
-              <span>Track Now</span>
-            </button>
-          </div>
-        </div>
-
-        {/* Order Details Body - Fully scrollable with visible styled scrollbar & touch panning */}
-        <div className="flex-1 overflow-y-auto overscroll-contain space-y-3.5 pr-2 text-xs min-h-0 touch-pan-y select-text custom-modal-scroll">
           {/* Customer Details Box */}
-          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gray-950/80 border border-gray-800/90 shadow-xs space-y-2">
-            <div className="text-orange-400 font-bold uppercase tracking-wider text-[10.5px] flex items-center justify-between">
-              <span>Customer & Delivery Coordinates</span>
-              <span className="text-gray-400 font-normal lowercase text-[10px]">scroll for all details ↓</span>
+          <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-gray-950/70 border border-gray-800 space-y-1.5">
+            <div className="text-gray-400 font-bold uppercase tracking-wider text-[10px]">
+              Customer & Delivery Coordinates
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 text-gray-200">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 text-gray-200">
               <div className="flex items-center gap-2">
                 <User className="w-3.5 h-3.5 text-orange-400 shrink-0" />
                 <span className="font-semibold text-white truncate">{order.customerName}</span>
@@ -283,39 +255,39 @@ export function OrderSuccessModal({ order, onClose, onTrackOrder }) {
               </div>
               <div className="flex items-start gap-2 sm:col-span-2">
                 <MapPin className="w-3.5 h-3.5 text-orange-400 shrink-0 mt-0.5" />
-                <span className="break-words leading-relaxed">{order.address}</span>
+                <span className="break-words">{order.address}</span>
               </div>
               {order.notes && (
-                <div className="sm:col-span-2 text-gray-300 text-[11px] italic bg-gray-900/60 p-2.5 rounded-lg border border-gray-800">
-                  Special Instructions: "{order.notes}"
+                <div className="sm:col-span-2 text-gray-400 text-[11px] italic bg-gray-900/50 p-2 rounded-lg border border-gray-800">
+                  Note: "{order.notes}"
                 </div>
               )}
             </div>
           </div>
 
-          {/* Ordered Dishes List (Full Unconstrained Table) */}
-          <div className="p-3.5 sm:p-4 rounded-xl sm:rounded-2xl bg-gray-950/80 border border-gray-800/90 shadow-xs space-y-2.5">
-            <div className="flex items-center justify-between text-gray-400 font-bold uppercase tracking-wider text-[10.5px]">
+          {/* Ordered Dishes List (Table layout) */}
+          <div className="p-3 sm:p-3.5 rounded-xl sm:rounded-2xl bg-gray-950/70 border border-gray-800 space-y-2">
+            <div className="flex items-center justify-between text-gray-400 font-bold uppercase tracking-wider text-[10px]">
               <span>Dishes Ordered ({order.items.length})</span>
               <span>Subtotal</span>
             </div>
-            <div className="divide-y divide-gray-800/90">
+            <div className="divide-y divide-gray-800/80">
               {order.items.map((it, idx) => (
-                <div key={idx} className="py-2 flex items-center justify-between text-gray-200 hover:bg-white/[0.02] px-1 rounded-lg transition-colors">
-                  <div className="flex items-center gap-2.5 min-w-0 pr-2">
-                    <span className="w-5 h-5 rounded-md bg-orange-500/20 text-orange-400 border border-orange-500/30 font-bold flex items-center justify-center text-[11px] shrink-0">
+                <div key={idx} className="py-1.5 flex items-center justify-between text-gray-200">
+                  <div className="flex items-center gap-2 min-w-0 pr-2">
+                    <span className="w-5 h-5 rounded-md bg-gray-800 text-orange-400 font-bold flex items-center justify-center text-[11px] shrink-0">
                       {it.quantity}
                     </span>
                     <span className="font-medium text-white truncate">{it.name}</span>
                   </div>
-                  <span className="font-bold text-gray-100 shrink-0">
+                  <span className="font-bold shrink-0">
                     Rs. {(it.price * it.quantity).toLocaleString()}
                   </span>
                 </div>
               ))}
             </div>
 
-            <div className="pt-2.5 border-t border-gray-800 flex justify-between items-center text-sm">
+            <div className="pt-2 border-t border-gray-800 flex justify-between items-center text-sm">
               <span className="font-bold text-gray-300 text-xs sm:text-sm">Total (Cash on Delivery)</span>
               <span className="text-lg sm:text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-amber-300">
                 Rs. {order.totalAmount.toLocaleString()}

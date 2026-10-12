@@ -4,7 +4,6 @@ import {
   User,
   Phone,
   MapPin,
-  FileText,
   Send,
   Plus,
   Minus,
@@ -320,21 +319,6 @@ export function OrderForm({
                 />
               </div>
 
-              {/* Notes / Special Instructions */}
-              <div className="space-y-2">
-                <label className="text-xs font-bold text-gray-400 uppercase tracking-wider flex items-center gap-1.5">
-                  <FileText className="w-3.5 h-3.5 text-gray-500" />
-                  <span>Cooking / Delivery Instructions (Optional)</span>
-                </label>
-                <input
-                  type="text"
-                  name="notes"
-                  value={formData.notes}
-                  onChange={handleInputChange}
-                  placeholder="e.g. Extra raita, mild spice, ring doorbell upon arrival"
-                  className="w-full px-4 py-3 rounded-xl bg-gray-950/80 border border-gray-800 text-white placeholder-gray-500 focus:outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 transition-all text-sm"
-                />
-              </div>
             </div>
           </div>
 
