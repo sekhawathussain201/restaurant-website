@@ -26,7 +26,9 @@ import {
   User,
   ArrowRight,
   ShieldCheck,
-  AlertCircle
+  AlertCircle,
+  Crown,
+  Sparkles
 } from 'lucide-react'
 
 import {
@@ -43,6 +45,36 @@ import {
   CATEGORIES,
   PRESET_IMAGES
 } from '../data/dishes'
+
+/* Royal Restaurant Logo Crest Watermark */
+function ZaiqaRoyalLogoWatermark({ className = 'w-full h-full' }) {
+  return (
+    <svg
+      viewBox="0 0 120 120"
+      fill="currentColor"
+      className={className}
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      {/* Outer Royal Crest Ring */}
+      <circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" strokeWidth="2" strokeDasharray="4 2" />
+      <circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" strokeWidth="1.5" />
+      {/* Crown at top */}
+      <path d="M44 38 L48 48 L60 42 L72 48 L76 38 L72 52 L48 52 Z" />
+      <circle cx="44" cy="36" r="2" />
+      <circle cx="60" cy="40" r="2.5" />
+      <circle cx="76" cy="36" r="2" />
+      {/* Crossed Royal Cutlery */}
+      <path d="M42 78 L54 66 M54 66 L50 62 M54 66 L58 70 M54 66 L78 42 M78 42 L80 44 L76 48 Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      <path d="M78 78 L66 54 M66 54 L62 58 M66 54 L70 50 M66 54 L42 42 M42 42 L40 44 L44 48 Z" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" />
+      {/* Golden Wok / Flame Base */}
+      <path d="M38 74 C38 88 82 88 82 74 C74 80 46 80 38 74 Z" />
+      {/* Stars */}
+      <polygon points="60,20 62,25 67,25 63,28 65,33 60,30 55,33 57,28 53,25 58,25" />
+      <polygon points="28,60 29.5,62.5 32,62.5 30,64 31,66.5 28,65 25,66.5 26,64 24,62.5 26.5,62.5" />
+      <polygon points="92,60 93.5,62.5 96,62.5 94,64 95,66.5 92,65 89,66.5 90,64 88,62.5 90.5,62.5" />
+    </svg>
+  )
+}
 
 function AdminLoginView({ onLoginSuccess }) {
   const [name, setName] = useState('')
@@ -96,18 +128,45 @@ function AdminLoginView({ onLoginSuccess }) {
       </div>
 
       <div className="relative w-full max-w-md">
-        <div className="bg-[#0B0F19] border border-gray-800 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-black/80 backdrop-blur-xl">
-          {/* Brand Header */}
-          <div className="flex flex-col items-center text-center mb-8">
-            <div className="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white shadow-xl shadow-orange-500/25 mb-4">
-              <UtensilsCrossed className="w-7 h-7" />
+        <div className="relative bg-[#0B0F19] border border-gray-800 rounded-3xl p-8 sm:p-10 shadow-2xl shadow-black/80 backdrop-blur-xl overflow-hidden">
+          {/* Subtle Card Background Logo Watermark */}
+          <div className="absolute -top-10 -right-10 w-56 h-56 text-orange-500/[0.04] pointer-events-none select-none rotate-12">
+            <ZaiqaRoyalLogoWatermark />
+          </div>
+
+          {/* Brand Header with Logo Behind Zaiqa Lounge */}
+          <div className="relative flex flex-col items-center text-center mb-8">
+            {/* Watermark Crest Logo directly behind "Zaiqa Lounge" */}
+            <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-48 h-48 text-orange-500/15 pointer-events-none select-none z-0 blur-[0.3px]">
+              <ZaiqaRoyalLogoWatermark />
             </div>
-            <h1 className="text-2xl font-black text-white tracking-tight font-['Playfair_Display']">
-              Zaiqa Lounge
-            </h1>
-            <p className="text-xs text-gray-400 mt-1">
-              Sign in to manage orders, menu items, and restaurant console
-            </p>
+
+            {/* Main Glowing Royal Logo Badge */}
+            <div className="relative z-10 mb-3.5 group">
+              <div className="relative">
+                <div className="w-16 h-16 rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-500 flex items-center justify-center text-white shadow-2xl shadow-orange-500/30 ring-4 ring-orange-500/20 group-hover:scale-105 transition-transform duration-300">
+                  <UtensilsCrossed className="w-8 h-8" />
+                </div>
+                {/* Crown pinned at top */}
+                <div className="absolute -top-2 -right-2 w-6 h-6 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 flex items-center justify-center shadow-md ring-2 ring-[#0B0F19]">
+                  <Crown className="w-3.5 h-3.5" />
+                </div>
+              </div>
+            </div>
+
+            <div className="relative z-10">
+              <div className="flex items-center justify-center gap-2">
+                <h1 className="text-2xl sm:text-3xl font-black text-white tracking-tight font-['Playfair_Display'] drop-shadow-md">
+                  Zaiqa Lounge
+                </h1>
+                <Crown className="w-5 h-5 text-amber-400" />
+              </div>
+              <p className="text-xs text-orange-400/90 font-semibold tracking-wider mt-1 flex items-center justify-center gap-1.5 uppercase">
+                <Sparkles className="w-3 h-3 text-amber-400" />
+                <span>Executive Admin Console</span>
+                <Sparkles className="w-3 h-3 text-amber-400" />
+              </p>
+            </div>
           </div>
 
           {/* Error Message */}
@@ -570,13 +629,21 @@ export function AdminPage() {
       {/* Mobile Top Bar */}
       <div className="md:hidden flex items-center justify-between p-4 bg-[#0A0F1D] border-b border-gray-800 shrink-0 z-30">
         <div className="flex items-center gap-2.5">
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white">
-            <UtensilsCrossed className="w-5 h-5" />
+          <div className="relative">
+            <div className="w-9 h-9 rounded-xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white">
+              <UtensilsCrossed className="w-5 h-5" />
+            </div>
+            <div className="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center">
+              <Crown className="w-2 h-2" />
+            </div>
           </div>
           <div>
-            <h2 className="text-base font-extrabold text-white font-['Playfair_Display'] leading-none">
-              Zaiqa Lounge
-            </h2>
+            <div className="flex items-center gap-1">
+              <h2 className="text-base font-extrabold text-white font-['Playfair_Display'] leading-none">
+                Zaiqa Lounge
+              </h2>
+              <Crown className="w-3 h-3 text-amber-400" />
+            </div>
             <p className="text-[9px] font-black uppercase tracking-widest text-orange-400 mt-0.5">
               ADMIN CONSOLE
             </p>
@@ -625,18 +692,34 @@ export function AdminPage() {
         }`}
       >
         <div className="space-y-6">
-          {/* Top Logo Badge */}
-          <div className="flex items-center gap-3 px-2 py-1">
-            <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/25">
-              <UtensilsCrossed className="w-6 h-6" />
+          {/* Top Logo Badge with Royal Crest Watermark behind Zaiqa Lounge */}
+          <div className="relative overflow-hidden rounded-2xl p-3.5 bg-gradient-to-br from-gray-900/95 via-gray-900/80 to-[#070B14] border border-gray-800 shadow-xl group">
+            {/* Watermark Logo behind "Zaiqa Lounge" */}
+            <div className="absolute -right-3 -bottom-3 w-28 h-28 text-orange-500/15 pointer-events-none select-none rotate-12 group-hover:rotate-6 transition-transform duration-500">
+              <ZaiqaRoyalLogoWatermark />
             </div>
-            <div>
-              <h2 className="text-lg font-extrabold text-white font-['Playfair_Display'] leading-none">
-                Zaiqa Lounge
-              </h2>
-              <p className="text-[10px] font-black uppercase tracking-widest text-orange-400 mt-1">
-                ADMIN CONSOLE
-              </p>
+
+            <div className="relative flex items-center gap-3 z-10">
+              <div className="relative shrink-0">
+                <div className="w-11 h-11 rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/30 ring-2 ring-orange-500/20">
+                  <UtensilsCrossed className="w-6 h-6 animate-pulse" />
+                </div>
+                <div className="absolute -top-1.5 -right-1.5 w-4 h-4 rounded-full bg-gradient-to-tr from-amber-400 to-yellow-300 text-slate-950 flex items-center justify-center shadow-xs">
+                  <Crown className="w-2.5 h-2.5" />
+                </div>
+              </div>
+              <div className="min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <h2 className="text-lg font-extrabold text-white font-['Playfair_Display'] leading-none">
+                    Zaiqa Lounge
+                  </h2>
+                  <Crown className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                </div>
+                <p className="text-[10px] font-black uppercase tracking-widest text-orange-400 mt-1 flex items-center gap-1">
+                  <Sparkles className="w-2.5 h-2.5 text-amber-400" />
+                  <span>ADMIN CONSOLE</span>
+                </p>
+              </div>
             </div>
           </div>
 

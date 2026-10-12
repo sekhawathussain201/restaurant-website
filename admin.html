@@ -108,13 +108,22 @@
     <!-- Brand Header -->
     <div class="p-5 border-b border-gray-800/80 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/30">
-          <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+        <div class="relative">
+          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/30 ring-2 ring-orange-500/20">
+            <i data-lucide="utensils-crossed" class="w-5 h-5"></i>
+          </div>
+          <div class="absolute -top-1 -right-1 w-3.5 h-3.5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center shadow-xs">
+            <i data-lucide="crown" class="w-2 h-2"></i>
+          </div>
         </div>
         <div>
-          <span class="text-base font-extrabold tracking-tight text-white font-display block">
-            Zaiqa Lounge
-          </span>
+          <div class="flex items-center gap-1.5">
+            <span class="text-base font-extrabold tracking-tight text-white font-display block">
+              Zaiqa Lounge
+            </span>
+            <i data-lucide="crown" class="w-3.5 h-3.5 text-amber-400"></i>
+          </div>
+          <span class="text-[9px] font-black uppercase tracking-widest text-orange-400 block -mt-0.5">ADMIN CONSOLE</span>
         </div>
       </div>
       <button onclick="toggleSidebar()" class="md:hidden text-gray-400 hover:text-white p-1">
@@ -1071,13 +1080,36 @@
 
   <!-- Admin Authentication Modal Overlay -->
   <div id="admin-login-overlay" class="fixed inset-0 z-50 bg-[#070B14]/95 backdrop-blur-md flex items-center justify-center p-4 hidden">
-    <div class="relative w-full max-w-md bg-[#0B0F19] border border-gray-800 rounded-3xl p-8 shadow-2xl">
-      <div class="flex flex-col items-center text-center mb-6">
-        <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-amber-600 to-orange-500 flex items-center justify-center text-white shadow-lg shadow-orange-500/25 mb-3">
-          <i data-lucide="utensils-crossed" class="w-6 h-6"></i>
+    <div class="relative w-full max-w-md bg-[#0B0F19] border border-gray-800 rounded-3xl p-8 shadow-2xl overflow-hidden">
+      <!-- Watermark Crest Logo behind Zaiqa Lounge -->
+      <div class="absolute -top-6 -right-6 w-44 h-44 text-orange-500/[0.05] pointer-events-none select-none rotate-12">
+        <svg viewBox="0 0 120 120" fill="currentColor" class="w-full h-full"><circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 2"/><circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M44 38 L48 48 L60 42 L72 48 L76 38 L72 52 L48 52 Z"/><path d="M42 78 L54 66 M54 66 L50 62 M54 66 L58 70 M54 66 L78 42 M78 42 L80 44 L76 48 Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M78 78 L66 54 M66 54 L62 58 M66 54 L70 50 M66 54 L42 42 M42 42 L40 44 L44 48 Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M38 74 C38 88 82 88 82 74 C74 80 46 80 38 74 Z"/></svg>
+      </div>
+
+      <div class="relative flex flex-col items-center text-center mb-6">
+        <!-- Watermark directly behind title -->
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 text-orange-500/10 pointer-events-none select-none z-0">
+          <svg viewBox="0 0 120 120" fill="currentColor" class="w-full h-full"><circle cx="60" cy="60" r="54" fill="none" stroke="currentColor" stroke-width="2" stroke-dasharray="4 2"/><circle cx="60" cy="60" r="48" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M44 38 L48 48 L60 42 L72 48 L76 38 L72 52 L48 52 Z"/><path d="M42 78 L54 66 M54 66 L50 62 M54 66 L58 70 M54 66 L78 42 M78 42 L80 44 L76 48 Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M78 78 L66 54 M66 54 L62 58 M66 54 L70 50 M66 54 L42 42 M42 42 L40 44 L44 48 Z" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"/><path d="M38 74 C38 88 82 88 82 74 C74 80 46 80 38 74 Z"/></svg>
         </div>
-        <h2 class="text-xl font-black text-white">Zaiqa Lounge</h2>
-        <p class="text-xs text-gray-400 mt-1">Sign in to manage orders & operations</p>
+
+        <div class="relative z-10 mb-3">
+          <div class="relative">
+            <div class="w-14 h-14 rounded-2xl bg-gradient-to-tr from-amber-600 via-orange-500 to-amber-500 flex items-center justify-center text-white shadow-xl shadow-orange-500/30 ring-2 ring-orange-500/20">
+              <i data-lucide="utensils-crossed" class="w-7 h-7"></i>
+            </div>
+            <div class="absolute -top-1.5 -right-1.5 w-5 h-5 rounded-full bg-amber-400 text-slate-950 flex items-center justify-center shadow-xs">
+              <i data-lucide="crown" class="w-3 h-3"></i>
+            </div>
+          </div>
+        </div>
+
+        <div class="relative z-10">
+          <div class="flex items-center justify-center gap-1.5">
+            <h2 class="text-2xl font-black text-white font-display">Zaiqa Lounge</h2>
+            <i data-lucide="crown" class="w-4 h-4 text-amber-400"></i>
+          </div>
+          <p class="text-xs text-orange-400 font-semibold uppercase tracking-wider mt-0.5">Executive Admin Console</p>
+        </div>
       </div>
 
       <form onsubmit="handleAdminLogin(event)" class="space-y-4">
